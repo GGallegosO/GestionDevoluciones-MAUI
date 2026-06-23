@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            xmlns:viewmodels="clr-namespace:GestionDevoluciones.ViewModels"
+            x:Class="GestionDevoluciones.Views.MainPage"
+            Title="Gestión de Devoluciones"
+            BackgroundColor="#121212"
+            BarBackgroundColor="#1E1E1E"
+            BarTextColor="#FFFFFF">
+
+    <TabbedPage.BindingContext>
+        <viewmodels:DevolucionesViewModel />
+    </TabbedPage.BindingContext>
+
+    <ContentPage Title="Pendientes" BackgroundColor="#121212">
+        <Grid Padding="15" RowDefinitions="Auto, Auto, *">
+            
+            <Grid Grid.Row="0" ColumnDefinitions="*, Auto" ColumnSpacing="10" Margin="0,0,0,15">
+                
+                <Button Grid.Column="0" Text="+ Registrar Nueva Devolución" 
+                        Command="{Binding NuevaDevolucionCommand}"
+                        BackgroundColor="#512BD4" TextColor="White" 
+                        CornerRadius="8" FontAttributes="Bold"/>
+                        
+                <Button Grid.Column="1" Text="Salir" 
+                        Clicked="OnCerrarSesionClicked"
+                        BackgroundColor="#E53935" TextColor="White" 
+                        CornerRadius="8" FontAttributes="Bold" WidthRequest="70"/>
+            </Grid>
+
+            <SearchBar Grid.Row="1" Placeholder="Buscar por nombre de cliente..." 
+                       Text="{Binding TextoBusqueda}" 
+                       PlaceholderColor="#888888" TextColor="White" CancelButtonColor="White" Margin="0,0,0,15" />
+
+            <CollectionView Grid.Row="2" ItemsSource="{Binding DevolucionesPendientes}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame BackgroundColor="#1E1E1E" BorderColor="#333333" CornerRadius="12" Padding="15" Margin="0,0,0,15" HasShadow="True">
+                            <VerticalStackLayout Spacing="8">
+                                <FlexLayout JustifyContent="SpaceBetween">
+                                    <Label Text="{Binding NombreCliente}" FontAttributes="Bold" TextColor="White" FontSize="16" />
+                                    <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy}'}" TextColor="#888888" FontSize="12" />
+                                </FlexLayout>
+                                <Label Text="{Binding Contacto, StringFormat='Contacto: {0}'}" TextColor="#AAAAAA" FontSize="12" />
+                                <Label Text="{Binding Motivo}" TextColor="#CCCCCC" FontAttributes="Italic" />
+                                <Label Text="{Binding ProductoId, StringFormat='ID Producto: {0}'}" TextColor="#512BD4" FontSize="12" FontAttributes="Bold" />
+                                
+                                <Button Text="🔍 Revisar y Procesar" 
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:DevolucionesViewModel}}, Path=AbrirDetalleCommand}"
+                                        CommandParameter="{Binding .}"
+                                        BackgroundColor="#512BD4" TextColor="White" CornerRadius="8" HeightRequest="40" Margin="0,10,0,0"/>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+    </ContentPage>
+
+    <ContentPage Title="Concluidas" BackgroundColor="#121212">
+        <Grid Padding="15" RowDefinitions="Auto, *">
+            
+            <SearchBar Grid.Row="0" Placeholder="Buscar cliente resuelto..." 
+                       Text="{Binding TextoBusquedaConcluidas}" 
+                       PlaceholderColor="#888888" TextColor="White" CancelButtonColor="White" Margin="0,0,0,15" />
+
+            <CollectionView Grid.Row="1" ItemsSource="{Binding DevolucionesConcluidas}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame BackgroundColor="#1A1A1A" BorderColor="#222222" CornerRadius="12" Padding="15" Margin="0,0,0,15">
+                            <VerticalStackLayout Spacing="5">
+                                
+                                <FlexLayout JustifyContent="SpaceBetween">
+                                    <Label Text="{Binding NombreCliente}" FontAttributes="Bold" TextColor="White" FontSize="16" />
+                                    <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy}'}" TextColor="#666666" FontSize="12" />
+                                </FlexLayout>
+                                
+                                <Label Text="{Binding NombreProducto, StringFormat='Producto: {0}'}" TextColor="#AAAAAA" FontSize="13" Margin="0,5,0,0"/>
+                                <HorizontalStackLayout Spacing="5">
+                                    <Label Text="Marca:" TextColor="#666666" FontSize="12" />
+                                    <Label Text="{Binding MarcaProducto}" TextColor="#AAAAAA" FontSize="12" />
+                                    <Label Text=" | Modelo:" TextColor="#666666" FontSize="12" />
+                                    <Label Text="{Binding ModeloProducto}" TextColor="#AAAAAA" FontSize="12" />
+                                </HorizontalStackLayout>
+                                
+                                <Label Text="{Binding Motivo, StringFormat='Motivo: {0}'}" TextColor="#888888" FontAttributes="Italic" FontSize="12" Margin="0,5,0,5"/>
+                                
+                                <Label Text="✔ Reembolso emitido" TextColor="#512BD4" FontSize="12" FontAttributes="Bold" />
+                                <Label Text="✔ Inventario actualizado" TextColor="#00C853" FontSize="12" FontAttributes="Bold" />
+                                
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+    </ContentPage>
+
+    <ContentPage Title="Inventario" BackgroundColor="#121212">
+        <Grid Padding="15" RowDefinitions="Auto,*">
+            
+            <SearchBar Grid.Row="0" Placeholder="Buscar producto..." 
+                       Text="{Binding TextoBusquedaInventario}"
+                       PlaceholderColor="#888888" TextColor="White" CancelButtonColor="White" Margin="0,0,0,15" />
+
+            <CollectionView Grid.Row="1" ItemsSource="{Binding Inventario}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame BackgroundColor="#1E1E1E" BorderColor="#333333" CornerRadius="12" Padding="15" Margin="0,0,0,10">
+                            <Grid ColumnDefinitions="*, Auto" VerticalOptions="Center">
+                                <VerticalStackLayout Grid.Column="0" VerticalOptions="Center" Spacing="2">
+                                    <Label Text="{Binding Nombre}" FontAttributes="Bold" TextColor="White" FontSize="16" />
+                                    <Label Text="{Binding Marca, StringFormat='Marca: {0}'}" TextColor="#888888" FontSize="12" />
+                                    <Label Text="{Binding Modelo, StringFormat='Modelo: {0}'}" TextColor="#888888" FontSize="12" />
+                                    <Label Text="{Binding Id, StringFormat='SKU: {0}'}" TextColor="#512BD4" FontSize="12" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" HorizontalOptions="Center">
+                                    <Label Text="STOCK" TextColor="#888888" FontSize="10" HorizontalTextAlignment="Center"/>
+                                    <Label Text="{Binding Stock}" FontAttributes="Bold" TextColor="#00C853" FontSize="22" HorizontalTextAlignment="Center"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+    </ContentPage>
+
+</TabbedPage>
