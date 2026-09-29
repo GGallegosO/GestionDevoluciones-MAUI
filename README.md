@@ -21,7 +21,7 @@ Aplicación móvil multiplataforma desarrollada en **.NET MAUI** utilizando el p
 
 ## 🧑‍💻 Autor
 
-* **Gustavo Gallegos** - *Estudiante de Analista Programador, Instituto Profesional Santo Tomás.*
+* **Gustavo Gallegos** - *Analista Programador, Instituto Profesional Santo Tomás.*
 
 ---
 *Proyecto académico desarrollado para la asignatura de Programación .NET.*
